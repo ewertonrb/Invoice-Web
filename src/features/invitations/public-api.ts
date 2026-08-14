@@ -1,0 +1,7 @@
+import { z } from "zod"; import { ApiError, toApiError } from "@/lib/api/error";
+const publicInvitationSchema = z.object({ companyName: z.string(), invitedName: z.string(), invitedSurname: z.string(), email: z.string(), role: z.literal("WORKER"), expiresAt: z.string(), valid: z.boolean() });
+const acceptanceSchema = z.object({ appUserId: z.number(), name: z.string(), surname: z.string().nullable(), email: z.string(), companyId: z.number(), companyName: z.string(), membershipId: z.number(), role: z.literal("WORKER"), membershipStatus: z.literal("ACTIVE"), newAccountCreated: z.boolean() });
+async function request(path: string, init?: RequestInit) { let response: Response; try { response = await fetch(`/api/public-invitations${path}`, { ...init, headers: { Accept: "application/json", ...(init?.body ? { "Content-Type": "application/json" } : {}) } }); } catch { throw new ApiError(503, "Could not connect to the server."); } if (!response.ok) throw await toApiError(response); if (response.status === 204) return undefined; return response.json(); }
+export const inspectInvitation = async (token: string) => publicInvitationSchema.parse(await request(`?token=${encodeURIComponent(token)}`));
+export const acceptInvitation = async (token: string, password: string, confirmPassword: string) => acceptanceSchema.parse(await request("/accept", { method: "POST", body: JSON.stringify({ token, password, confirmPassword }) }));
+export const declineInvitation = async (token: string) => request("/decline", { method: "POST", body: JSON.stringify({ token }) });

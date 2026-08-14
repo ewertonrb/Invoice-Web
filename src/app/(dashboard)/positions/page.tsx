@@ -1,0 +1,2 @@
+import { redirect } from "next/navigation"; import { PositionList } from "@/features/positions/position-list"; import { getSession } from "@/lib/auth/server"; import { can } from "@/lib/permissions";
+export default async function PositionsPage() { const session = await getSession(); const company = session?.activeCompany; if (!company) redirect("/select-company"); if (!can(company.role, "rates:manage")) redirect("/dashboard"); return <PositionList companyId={company.companyId} />; }

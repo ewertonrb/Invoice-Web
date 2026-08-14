@@ -1,0 +1,11 @@
+import { ApiError, toApiError } from "@/lib/api/error";
+import { positionListResponseSchema, type Position } from "@/features/positions/schemas";
+import { rateListResponseSchema, rateResponseSchema, rateSchema, type Rate, type RateInput } from "./schemas";
+async function request(path: string, init?: RequestInit): Promise<unknown> { let response: Response; try { response = await fetch(`/api/backend${path}`, { ...init, headers: { Accept: "application/json", ...(init?.body ? { "Content-Type": "application/json" } : {}), ...init?.headers } }); } catch { throw new ApiError(503, "Could not connect to the server."); } if (response.status === 401) { window.location.replace(new URL("/api/auth/clear-session", window.location.origin).href); throw new ApiError(401, "Your session has expired."); } if (!response.ok) throw await toApiError(response); if (response.status === 204) return undefined; return response.json(); }
+const payload = (input: RateInput) => { const parsed = rateSchema.parse(input); return { ...parsed, effectiveTo: parsed.effectiveTo || null, items: parsed.items.map((item) => ({ ...item, value: item.value, description: item.description || null })) }; };
+export async function getRates(positionId: number): Promise<Rate[]> { return rateListResponseSchema.parse(await request(`/project-role-rates/position/${positionId}`)); }
+export async function getRate(id: number): Promise<Rate> { return rateResponseSchema.parse(await request(`/project-role-rates/${id}`)); }
+export async function getPositions(activeOnly = false): Promise<Position[]> { return positionListResponseSchema.parse(await request(`/projectpositions?activeOnly=${activeOnly}`)); }
+export async function createRate(input: RateInput): Promise<Rate> { return rateResponseSchema.parse(await request("/project-role-rates", { method: "POST", body: JSON.stringify(payload(input)) })); }
+export async function updateRate(id: number, input: RateInput): Promise<Rate> { return rateResponseSchema.parse(await request(`/project-role-rates/${id}`, { method: "PUT", body: JSON.stringify(payload(input)) })); }
+export async function setRateActive(id: number, active: boolean): Promise<Rate | undefined> { const data = await request(`/project-role-rates/${id}/${active ? "reactivate" : "deactivate"}`, { method: "PATCH" }); return data ? rateResponseSchema.parse(data) : undefined; }

@@ -1,0 +1,13 @@
+import Link from "next/link";
+
+export function PageHeader({ eyebrow, title, description, action }: { eyebrow: string; title: string; description: string; action?: React.ReactNode }) {
+  return <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-sm font-semibold text-emerald-700">{eyebrow}</p><h1 className="mt-2 text-3xl font-semibold tracking-[-0.035em] text-slate-950 sm:text-4xl">{title}</h1><p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">{description}</p></div>{action}</div>;
+}
+
+export function ErrorPanel({ message, retry }: { message: string; retry?: () => void }) {
+  return <div role="alert" className="rounded-2xl border border-red-200 bg-red-50 p-5 text-red-900"><p className="font-semibold">We couldn&apos;t load this company.</p><p className="mt-1 text-sm">{message}</p>{retry && <button type="button" onClick={retry} className="mt-4 rounded-xl bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800">Try again</button>}</div>;
+}
+
+export function BackLink({ href = "/companies" }: { href?: string }) {
+  return <Link href={href} className="text-sm font-semibold text-emerald-700 hover:text-emerald-900">← Back to companies</Link>;
+}

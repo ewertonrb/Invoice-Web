@@ -1,0 +1,2 @@
+import { describe, expect, it } from "vitest"; import { queryKeys } from "@/lib/api/query-keys"; import { can } from "@/lib/permissions";
+describe("invitation access", () => { it("scopes cache by company", () => expect(queryKeys.invitations(7)).toEqual(["company", 7, "invitations"])); it.each(["OWNER", "ADMIN", "MANAGER"] as const)("allows %s through worker management", (role) => expect(can(role, "workers:manage")).toBe(true)); it.each(["FINANCE", "WORKER"] as const)("denies %s invitation management", (role) => expect(can(role, "workers:manage")).toBe(false)); });
