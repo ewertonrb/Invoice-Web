@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Invoice Platform Web
 
-## Getting Started
+Frontend web do Invoice Platform, construído com Next.js, React, TypeScript e Tailwind CSS.
 
-First, run the development server:
+O frontend fornece a interface para autenticação, seleção de empresa, workers, worklogs, aprovações, invoices, shifts, notificações e configurações da conta.
+
+## Requisitos
+
+- Node.js 20 ou superior
+- npm
+- Backend `InvoiceAPI` disponível localmente ou em um ambiente remoto
+
+## Configuração local
+
+Instale as dependências:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Crie o arquivo `.env.local` a partir do exemplo:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp .env.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Configure a URL do backend:
 
-## Learn More
+```env
+API_BASE_URL=http://localhost:8080
+```
 
-To learn more about Next.js, take a look at the following resources:
+`API_BASE_URL` é usado pelo proxy server-side do Next.js. O navegador acessa o backend através de `/api/backend`, mantendo o token de sessão no servidor.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run dev       # ambiente de desenvolvimento
+npm run build     # build de produção
+npm run start     # inicia o build de produção
+npm run typecheck # valida os tipos TypeScript
+npm run lint      # executa o ESLint
+npm test          # executa os testes Vitest
+```
 
-## Deploy on Vercel
+Antes de publicar, execute pelo menos:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run typecheck
+npm test -- --run
+npm run build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Produção
+
+Defina `API_BASE_URL` com a URL interna ou pública do backend de produção e gere o build:
+
+```bash
+API_BASE_URL=https://api.example.com npm run build
+npm run start
+```
+
+Em produção, o frontend deve ser executado atrás de HTTPS e de um reverse proxy. Não commite `.env.local`, tokens, passwords ou chaves privadas.
+
+## Arquitetura
+
+- `src/app`: rotas do App Router, layouts e endpoints BFF.
+- `src/features`: componentes, schemas, APIs e hooks por domínio.
+- `src/components/layout`: shell principal e navegação do dashboard.
+- `src/lib/auth`: sessão, cookies e redirects de autenticação.
+- `src/lib/api`: cliente server-side, erros e chaves de cache.
+- `public/images`: assets estáticos, incluindo a logo da aplicação.
+
+As rotas em `src/app/api/backend/[...path]` encaminham as requisições autenticadas para o backend configurado em `API_BASE_URL`. A sessão é mantida em cookie HTTP-only.
+
+## Repositório relacionado
+
+- Backend: [InvoiceAPI](https://github.com/ewertonrb/InvoiceAPI)
+- Branch de desenvolvimento: `develop`
+
+As alterações do frontend devem ser integradas na branch `develop` antes do deploy. O frontend e o backend precisam estar configurados para apontar um para o outro no ambiente correspondente.
