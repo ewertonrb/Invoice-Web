@@ -17,4 +17,5 @@ export async function getMyShifts(companyId: number): Promise<Shift[]> { return 
 export async function createShift(companyId: number, input: ShiftInput): Promise<Shift> { return shiftSchema.parse(await request(base(companyId), { method: "POST", body: JSON.stringify(shiftInputSchema.parse(input)) })); }
 export async function acceptShift(companyId: number, id: number): Promise<Shift> { return shiftSchema.parse(await request(`${base(companyId)}/${id}/accept`, { method: "POST" })); }
 export async function declineShift(companyId: number, id: number, reason?: string): Promise<Shift> { return shiftSchema.parse(await request(`${base(companyId)}/${id}/decline`, { method: "POST", body: JSON.stringify(reason ? { reason } : {}) })); }
+export async function cancelShiftAssignment(companyId: number, shiftId: number, assignmentId: number): Promise<Shift> { return shiftSchema.parse(await request(`${base(companyId)}/${shiftId}/assignments/${assignmentId}/cancel`, { method: "POST" })); }
 export async function cancelShift(companyId: number, id: number): Promise<void> { await request(`${base(companyId)}/${id}`, { method: "DELETE" }); }

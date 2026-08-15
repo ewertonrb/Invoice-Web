@@ -8,5 +8,5 @@ export default async function ShiftsPage() {
   const company = session?.activeCompany;
   if (!company) redirect("/select-company");
   if (!can(company.role, "shifts:view")) redirect("/dashboard");
-  return <ShiftPage companyId={company.companyId} canManage={can(company.role, "shifts:manage")} />;
+  return <ShiftPage companyId={company.companyId} canManage={can(company.role, "shifts:manage")} isOwner={company.role === "OWNER"} />;
 }
