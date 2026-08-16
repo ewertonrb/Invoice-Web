@@ -20,7 +20,7 @@ const items: Array<{ href: string; label: string; icon: typeof Gauge; permission
   { href: "/rates", label: "Rate tables", icon: Receipt, permissions: ["rates:view"] },
   { href: "/workers", label: "Workers", icon: Users, permissions: ["workers:manage"] },
   { href: "/invitations", label: "Invitations", icon: Users, permissions: ["workers:manage"] },
-  { href: "/work-logs", label: "Work logs", icon: ClipboardCheck, permissions: ["workLogs:own", "workLogs:review"] },
+  { href: "/work-logs", label: "Timesheets", icon: ClipboardCheck, permissions: ["workLogs:own", "workLogs:review"] },
   { href: "/shifts", label: "Shifts", icon: CalendarDays, permissions: ["shifts:view"] },
   { href: "/invoices", label: "Invoices", icon: FileText, permissions: ["invoices:view"] },
   { href: "/settings", label: "Settings", icon: Settings, permissions: ["company:manage"] },
