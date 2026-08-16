@@ -23,7 +23,7 @@ const items: Array<{ href: string; label: string; icon: typeof Gauge; permission
   { href: "/work-logs", label: "Timesheets", icon: ClipboardCheck, permissions: ["workLogs:own", "workLogs:review"] },
   { href: "/shifts", label: "Shifts", icon: CalendarDays, permissions: ["shifts:view"] },
   { href: "/invoices", label: "Invoices", icon: FileText, permissions: ["invoices:view"] },
-  { href: "/settings", label: "Settings", icon: Settings, permissions: ["company:manage"] },
+  { href: "/settings", label: "My Profile", icon: Settings, permissions: ["company:manage"] },
   { href: "/profile", label: "My profile", icon: Settings, permissions: ["profile:own"] },
 ];
 
